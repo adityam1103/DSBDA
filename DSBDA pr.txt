@@ -1,0 +1,187 @@
+Practical No. 01: Data Wrangling IObjective: Perform data preprocessing and categorical encoding on student performance data.  Pythonimport pandas as pd
+import numpy as np
+
+# Load Dataset [cite: 9]
+df = pd.read_csv('StudentsPerformance.csv')
+df.head()
+
+# Data Preprocessing & Statistics [cite: 10, 11, 14]
+df.isnull().sum()
+df.describe()
+df.info()
+print(df.shape)
+
+# Data Type Conversion [cite: 15]
+df['writing score'] = df['writing score'].astype(float)
+
+# Categorical to Quantitative Conversion [cite: 17]
+df["gender"] = df['gender'].replace({"female": 0, "male": 1})
+df.sample(5)
+
+
+
+
+
+Practical No. 02: Data Wrangling IIObjective: Handle missing values and filter outliers to improve academic performance data quality.  Pythonimport pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Missing Value Handling [cite: 27, 30]
+df = pd.read_csv("StudentsPerformance.csv")
+math_score_mean = df["math score"].mean()
+df["math score"] = df["math score"].fillna(math_score_mean)
+
+# Outlier Detection & Transformation [cite: 32, 33]
+df.boxplot()
+# Filtering math scores to remove significant outliers
+newdf = df[df["math score"] > 30]
+newdf.boxplot()
+
+
+
+
+
+Practical No. 03: Descriptive StatisticsObjective: Calculate summary statistics grouped by categorical variables.  Pythonimport pandas as pd
+df = pd.read_csv("Iris.csv")
+
+# Basic Statistical Details [cite: 44, 47]
+df.describe()
+df["SepalLengthCm"].describe()
+
+# Grouped Statistics by Species [cite: 48]
+df.groupby("Species").describe()
+
+
+
+
+
+
+
+Practical No. 04: Data Analytics I (Linear Regression)Objective: Predict home prices using the Boston Housing Dataset.  Pythonimport pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load and Split Data [cite: 57, 59, 61]
+df = pd.read_csv("BostonHousing.csv").dropna()
+x = df.drop(['medv'], axis=1)
+y = df['medv']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
+
+# Model Training & Evaluation [cite: 61, 63]
+model = LinearRegression()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+print("MSE:", np.sqrt(mean_squared_error(y_test, y_pred)))
+
+
+
+
+
+
+Practical No. 05: Data Analytics II (Logistic Regression)Objective: Perform classification on social network advertisements.  Pythonfrom sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Encoding and Training [cite: 66, 69]
+df = pd.read_csv("Social_Network_Ads.csv")
+df['Gender'] = df['Gender'].replace({"Male": 0, "Female": 1})
+
+model = LogisticRegression()
+model.fit(x_train, y_train)
+
+# Evaluation Metrics [cite: 69]
+y_pred = model.predict(x_test)
+cm = confusion_matrix(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
+
+
+
+
+
+Practical No. 06: Data Analytics III (Naïve Bayes)Objective: Implement Naïve Bayes classification on the Iris dataset.  Pythonfrom sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import MinMaxScaler
+
+# Feature Scaling [cite: 74]
+scaler = MinMaxScaler()
+x_scaled = scaler.fit_transform(x)
+
+# Training & Accuracy [cite: 76, 77]
+gnb = GaussianNB()
+gnb.fit(x_train, y_train)
+y_pred = gnb.predict(x_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+
+
+
+
+Practical No. 07: Text AnalyticsObjective: Apply NLP methods like Tokenization, Lemmatization, and TF-IDF.  Pythonimport nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Lemmatization [cite: 88]
+lemmatizer = WordNetLemmatizer()
+text = "studies studying cries cry"
+tokens = word_tokenize(text)
+lemmas = [lemmatizer.lemmatize(w) for w in tokens]
+
+# TF-IDF [cite: 90]
+tfidf = TfidfVectorizer()
+result = tfidf.fit_transform(['Jupiter is the largest Planet', 'Mars is the fourth planet'])
+
+
+
+
+
+
+Practical No. 08 & 09: Data Visualization I & IIObjective: Visualize distribution and patterns in the Titanic dataset.  Pythonimport seaborn as sb
+import matplotlib.pyplot as plt
+
+df = sb.load_dataset('titanic')
+
+# Histogram Distribution [cite: 99]
+sb.histplot(data=df, x='age', hue='survived', multiple='dodge')
+
+# Boxplot for Gender and Survival [cite: 105]
+sb.boxplot(x='sex', y='age', data=df, hue='survived')
+
+
+
+
+
+Practical No. 10: Data Visualization IIIObjective: Illustrate feature distributions and identify outliers in the Iris dataset.  Pythonimport seaborn as sb
+ds = sb.load_dataset('iris')
+
+# Feature Distribution Histograms [cite: 112]
+sb.histplot(ds['sepal_length'])
+
+# Comparison Boxplots [cite: 113]
+sb.boxplot(x='species', y='petal_length', data=ds)
+
+
+
+
+
+
+
+
+Practical No. 11, 12, & 13: Hadoop MapReduce (Java)Objective: Implement distributed computing for WordCount, Log Analysis, and Weather Averages.  Practical 11: WordCount Mapper Snippet   Javapublic void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+    StringTokenizer itr = new StringTokenizer(value.toString());
+    while (itr.hasMoreTokens()) {
+        word.set(itr.nextToken());
+        context.write(word, one);
+    }
+}
+Practical 13: Weather Average Reducer Snippet   Javapublic void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+    int tempSum = 0, count = 0;
+    for (Text val : values) {
+        String[] nums = val.toString().split(",");
+        tempSum += Integer.parseInt(nums[0]);
+        count++;
+    }
+    double avgTemp = (double) tempSum / count;
+    context.write(key, new Text("AvgTemp=" + avgTemp));
+}
